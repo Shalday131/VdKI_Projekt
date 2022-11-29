@@ -1,4 +1,4 @@
-import cv2
+import cv2 as cv
 import numpy as np
 from scipy.spatial import distance
 import copy
@@ -14,7 +14,7 @@ class preimg:
     def setimg(self, pimg):
         """Image einlesen von dem der Feature-Vektor erstellt wird:
         Bild wird dazu resized """
-        resize = cv2.resize(pimg, (700, 700))
+        resize = cv.resize(pimg, (700, 700))
         self.img = copy.deepcopy(resize)
         self.draw_img = copy.deepcopy(resize)
         return 1
@@ -22,14 +22,14 @@ class preimg:
     def prepreprocess(self):
         """Erste Version für die Vorverarbeitung des Bildes: Schwarz/Weiß Bild und Unschärfe"""
         img = self.img
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(gray, (9, 9), 0)
+        gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        blur = cv.GaussianBlur(gray, (9, 9), 0)
         return blur
 
     def prepreprocess2(self):
         """(wird nicht benutzt) Zweite Version für Vorbereitung des Bildes"""
-        quadrat = cv2.resize(self.img, (500, 500))
-        gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        quadrat = cv.resize(self.img, (500, 500))
+        gray = cv.cvtColor(self.img, cv.COLOR_BGR2GRAY)
 
     def calc_canny_cnts(self):
         """"Version 1 um vom Bild die Hauptinformation zu extrahieren:
@@ -39,28 +39,28 @@ class preimg:
         image = self.prepreprocess()
         height, width = image.shape
         mpkt = (int(width / 2), int(height / 2))  # (x,y)
-        Groesse = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        Groesse = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
 
-        canny_img1 = cv2.Canny(image=image, threshold1=8, threshold2=53)
-        canny_img2 = cv2.Canny(image=image, threshold1=8, threshold2=182)
+        canny_img1 = cv.Canny(image=image, threshold1=8, threshold2=53)
+        canny_img2 = cv.Canny(image=image, threshold1=8, threshold2=182)
 
-        dil_img1 = cv2.dilate(canny_img1, Groesse, iterations=3)
-        dil_img2 = cv2.dilate(canny_img2, Groesse, iterations=3)
+        dil_img1 = cv.dilate(canny_img1, Groesse, iterations=3)
+        dil_img2 = cv.dilate(canny_img2, Groesse, iterations=3)
 
-        cnts1 = cv2.findContours(dil_img1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts1 = cv.findContours(dil_img1, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         cnts1 = cnts1[0] if len(cnts1) == 2 else cnts1[1]
         if cnts1 is not None:
             if len(cnts1) != 0:
-                c1 = max(cnts1, key=cv2.contourArea)
+                c1 = max(cnts1, key=cv.contourArea)
             else:
                 Flag = True
         else:
             Flag = True
-        cnts2 = cv2.findContours(dil_img2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts2 = cv.findContours(dil_img2, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         cnts2 = cnts2[0] if len(cnts2) == 2 else cnts2[1]
         if cnts1 is not None:
             if len(cnts2) != 0:
-                c2 = max(cnts2, key=cv2.contourArea)
+                c2 = max(cnts2, key=cv.contourArea)
             else:
                 c2 = c1
         else:
@@ -83,7 +83,7 @@ class preimg:
         if True or (0.05 * width < left1[0] and right1[0] < 0.95 * width and 0.05 * height < top1[1] and bottom1[
             1] < 0.95 * height):
             if np.sum(np.abs(np.subtract(mpkt_conts1, mpkt))) < np.sum(np.abs(np.subtract(mpkt_conts2, mpkt))):
-                if cv2.contourArea(c1) > cv2.contourArea(c2):
+                if cv.contourArea(c1) > cv.contourArea(c2):
                     self.imgdict = {
                         "cannyimg": canny_img1,
                         "preimage": image,
@@ -124,15 +124,15 @@ class preimg:
         image = self.prepreprocess()
         height, width = image.shape
         mpkt = (int(width / 2), int(height / 2))  # (x,y)
-        Groesse = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        Groesse = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
         rics_ths = [(10, 25), (8, 53), (8, 194), (35, 288)]
         First_Cnts = True
 
         for thres in rics_ths:
             th1, th2 = thres
-            new_canny_img = cv2.Canny(image=image, threshold1=th1, threshold2=th2)
-            new_dil_img = cv2.dilate(new_canny_img, Groesse, iterations=3)
-            new_contours = cv2.findContours(new_dil_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            new_canny_img = cv.Canny(image=image, threshold1=th1, threshold2=th2)
+            new_dil_img = cv.dilate(new_canny_img, Groesse, iterations=3)
+            new_contours = cv.findContours(new_dil_img, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             if new_contours[1] is None:
                 continue
             new_cnts, new_hierarchy = new_contours
@@ -145,8 +145,8 @@ class preimg:
 
             new_innercts_count = len(temp_list)
             new_cnts_count = len(new_contours)
-            new_cmax = max(new_cnts, key=cv2.contourArea)
-            new_box = cv2.minAreaRect(new_cmax)
+            new_cmax = max(new_cnts, key=cv.contourArea)
+            new_box = cv.minAreaRect(new_cmax)
             new_cnts_mpkt, (new_width, new_height), _ = new_box
 
             left = tuple(new_cmax[new_cmax[:, :, 0].argmin()][0])
@@ -174,9 +174,9 @@ class preimg:
             else:
                 if (0.03 * width < left[0] and right[0] < 0.97 * width and 0.03 * height < top[1] and bottom[
                     1] < 0.97 * height):
-                    # if cv2.contourArea(new_cmax) > cv2.contourArea(old_cmax):
-                    if (cv2.contourArea(new_cmax) < 1.35 * cv2.contourArea(old_cmax)) and (
-                            cv2.contourArea(new_cmax) > 0.80 * cv2.contourArea(old_cmax)):
+                    # if cv.contourArea(new_cmax) > cv.contourArea(old_cmax):
+                    if (cv.contourArea(new_cmax) < 1.35 * cv.contourArea(old_cmax)) and (
+                            cv.contourArea(new_cmax) > 0.80 * cv.contourArea(old_cmax)):
                         if True or new_innercts_count > 3 and new_innercts_count < old_intercts_count:
                             old_new_canny_img = new_canny_img
                             old_cnts = new_cnts
@@ -217,10 +217,10 @@ class preimg:
         image = self.prepreprocess()
         height, width = image.shape
         mpkt = (int(width / 2), int(height / 2))  # (x,y)
-        _, thresh_img = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        cnts = cv2.findContours(thresh_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        _, thresh_img = cv.threshold(image, 0, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
+        cnts = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         cnts1 = cnts[0] if len(cnts) == 2 else cnts[1]
-        c1 = max(cnts1, key=cv2.contourArea)
+        c1 = max(cnts1, key=cv.contourArea)
 
         left1 = tuple(c1[c1[:, :, 0].argmin()][0])
         right1 = tuple(c1[c1[:, :, 0].argmax()][0])
@@ -250,21 +250,21 @@ class preimg:
         for idx, xx in enumerate(hierarchy[0]):
             if xx[2] == -1 and xx[3] != -1:
                 temp_list.append(idx)
-        max_area = cv2.contourArea(cnts[temp_list[0]])
+        max_area = cv.contourArea(cnts[temp_list[0]])
         max_idx = 0
         for ii in temp_list:
-            new_area = cv2.contourArea(cnts[ii])
-            if max_area < cv2.contourArea(cnts[ii]):
+            new_area = cv.contourArea(cnts[ii])
+            if max_area < cv.contourArea(cnts[ii]):
                 max_area = new_area
                 max_idx = ii
         count = 1
         for xx in temp_list:
-            new_area = cv2.contourArea(cnts[ii])
+            new_area = cv.contourArea(cnts[ii])
             if new_area > 0.6 * max_area:
                 count += 1
         self.imgdict["innter_cnts"] = cnts[max_idx]
-        cv2.drawContours(self.draw_img, [cnts[max_idx]], -1, (0, 0, 0), 2)
-        return count, max_area / cv2.contourArea(cmax)
+        cv.drawContours(self.draw_img, [cnts[max_idx]], -1, (0, 0, 0), 2)
+        return count, max_area / cv.contourArea(cmax)
 
     def calc_rel_breitgroß(self):
         """Rechnet das Größe/ Breite Verhälnis aus"""
@@ -278,12 +278,12 @@ class preimg:
         return abs(d_breit / d_hoch)
 
     def calc_rel_breitgroß_2(self):
-        """Rechnet das Größe/ Breite Verhältnis mit cv2.minAreaRet aus"""
+        """Rechnet das Größe/ Breite Verhältnis mit cv.minAreaRet aus"""
         # ( center (x,y), (width, height), angle of rotation )
         cnts = self.imgdict["cmax"]
-        rect = cv2.minAreaRect(cnts)
+        rect = cv.minAreaRect(cnts)
         self.imgdict["rect"] = rect
-        box = cv2.minAreaRect(cnts)
+        box = cv.minAreaRect(cnts)
         _, (width, height), _ = box
 
         return min(width, height) / max(width, height)
@@ -362,7 +362,7 @@ class preimg:
     def calc_canny_lines(self):
         """Rechnet die Anzahl an entdeckten Linien aus"""
         cannyimg = self.imgdict["cannyimg"]
-        lines = cv2.HoughLinesP(cannyimg, rho=1, theta=1 * np.pi / 180, threshold=100, minLineLength=30, maxLineGap=2)
+        lines = cv.HoughLinesP(cannyimg, rho=1, theta=1 * np.pi / 180, threshold=100, minLineLength=30, maxLineGap=2)
 
         if lines is not None:
             return len(lines)
@@ -372,27 +372,27 @@ class preimg:
         """Rechnet die Anzahl an entdeckten Ecken am Rand des Gegenstands aus"""
         cnts = self.imgdict["cmax"]
         blank_image = np.zeros((self.imgdict["height"], self.imgdict["width"]), np.uint8)
-        cv2.drawContours(blank_image, [cnts], -1, color=(255, 255, 255), thickness=cv2.FILLED)
+        cv.drawContours(blank_image, [cnts], -1, color=(255, 255, 255), thickness=cv.FILLED)
         self.imgdict["edgeimg"] = blank_image
-        corners = cv2.goodFeaturesToTrack(blank_image, 1000, 0.65, 5)
+        corners = cv.goodFeaturesToTrack(blank_image, 1000, 0.65, 5)
         if corners is None:
             return 0
         corners = np.int0(corners)
         """for corner in corners:
             x,y = corner.ravel()
-            cv2.circle(self.draw_img,(x,y),3,(255,0,0),-1)"""
+            cv.circle(self.draw_img,(x,y),3,(255,0,0),-1)"""
 
         return len(corners)
 
     def calc_edges2(self):
         """Rechnet die Anzahl an entdeckten Ecken aus"""
         img = self.img
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        corners = cv2.goodFeaturesToTrack(img, 1000, 0.3, 5)
+        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        corners = cv.goodFeaturesToTrack(img, 1000, 0.3, 5)
         corners = np.int0(corners)
         for corner in corners:
             x, y = corner.ravel()
-            cv2.circle(self.draw_img, (x, y), 3, (255, 0, 0), -1)
+            cv.circle(self.draw_img, (x, y), 3, (255, 0, 0), -1)
         if corners is not None:
             return len(corners)
         return 0
@@ -400,9 +400,9 @@ class preimg:
     def calc_circles(self):
         """Rechnet die Anzahl an entdeckten Kreisen aus"""
         img = self.img
-        img = cv2.medianBlur(img, 5)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        circles = cv2.HoughCircles(img, method=cv2.HOUGH_GRADIENT_ALT, dp=1.5, minDist=250,
+        img = cv.medianBlur(img, 5)
+        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        circles = cv.HoughCircles(img, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=250,
                                    param1=140, param2=0.9, minRadius=20, maxRadius=200)
 
         if circles is not None:
@@ -417,25 +417,25 @@ class preimg:
             left, right = self.imgdict["left"], self.imgdict["right"]
             top, bottom = self.imgdict["top"], self.imgdict["bottom"]
 
-            cv2.drawContours(self.draw_img, [cnts], -1, (36, 255, 12), 2)
-            cv2.circle(self.draw_img, left, 8, (0, 50, 255), -1)
-            cv2.circle(self.draw_img, right, 8, (0, 255, 255), -1)
-            cv2.circle(self.draw_img, top, 8, (255, 50, 0), -1)
-            cv2.circle(self.draw_img, bottom, 8, (255, 255, 0), -1)
+            cv.drawContours(self.draw_img, [cnts], -1, (36, 255, 12), 2)
+            cv.circle(self.draw_img, left, 8, (0, 50, 255), -1)
+            cv.circle(self.draw_img, right, 8, (0, 255, 255), -1)
+            cv.circle(self.draw_img, top, 8, (255, 50, 0), -1)
+            cv.circle(self.draw_img, bottom, 8, (255, 255, 0), -1)
         if wasdenn in ("Spitze", None):
             slpktO, srpktO = self.imgdict["spitze_pktO"][0], self.imgdict["spitze_pktO"][1]
             slpktU, srpktU = self.imgdict["spitze_pktU"][0], self.imgdict["spitze_pktU"][1]
 
-            cv2.circle(self.draw_img, slpktO, 5, (255, 234, 255), -1)
-            cv2.circle(self.draw_img, srpktO, 5, (255, 234, 255), -1)
-            cv2.circle(self.draw_img, slpktU, 5, (255, 234, 255), -1)
-            cv2.circle(self.draw_img, srpktU, 5, (255, 234, 255), -1)
+            cv.circle(self.draw_img, slpktO, 5, (255, 234, 255), -1)
+            cv.circle(self.draw_img, srpktO, 5, (255, 234, 255), -1)
+            cv.circle(self.draw_img, slpktU, 5, (255, 234, 255), -1)
+            cv.circle(self.draw_img, srpktU, 5, (255, 234, 255), -1)
 
         if wasdenn in ("rect", None):
             rect = self.imgdict["rect"]
-            box = cv2.boxPoints(rect)
+            box = cv.boxPoints(rect)
             box = np.int0(box)
-            cv2.drawContours(self.draw_img, [box], 0, (0, 0, 255), 2)
+            cv.drawContours(self.draw_img, [box], 0, (0, 0, 255), 2)
 
         return 1
 
