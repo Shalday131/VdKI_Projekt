@@ -33,19 +33,19 @@ class preimg:
 
     def calc_canny_cnts(self):
         """"Version 1 um vom Bild die Hauptinformation zu extrahieren:
-        Konturen, Maxima, innter Kontures usw. werdem in self.imgdicht geschrieben.
+        Konturen, Maxima, innere Konturen usw. werden in self.imgdict geschrieben.
         Es wird als Hauptfunktion hierfür der Canny Filter benutzt"""
-        Flag = False
+        flag = False
         image = self.prepreprocess()
         height, width = image.shape
         mpkt = (int(width / 2), int(height / 2))  # (x,y)
-        Groesse = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+        groesse = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
 
         canny_img1 = cv.Canny(image=image, threshold1=8, threshold2=53)
         canny_img2 = cv.Canny(image=image, threshold1=8, threshold2=182)
 
-        dil_img1 = cv.dilate(canny_img1, Groesse, iterations=3)
-        dil_img2 = cv.dilate(canny_img2, Groesse, iterations=3)
+        dil_img1 = cv.dilate(canny_img1, groesse, iterations=3)
+        dil_img2 = cv.dilate(canny_img2, groesse, iterations=3)
 
         cnts1 = cv.findContours(dil_img1, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         cnts1 = cnts1[0] if len(cnts1) == 2 else cnts1[1]
@@ -53,9 +53,9 @@ class preimg:
             if len(cnts1) != 0:
                 c1 = max(cnts1, key=cv.contourArea)
             else:
-                Flag = True
+                flag = True
         else:
-            Flag = True
+            flag = True
         cnts2 = cv.findContours(dil_img2, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         cnts2 = cnts2[0] if len(cnts2) == 2 else cnts2[1]
         if cnts1 is not None:
@@ -65,7 +65,7 @@ class preimg:
                 c2 = c1
         else:
             c2 = c1
-        if Flag:
+        if flag:
             c1 = c2
         # Kontuur maxima berechnen
         left1 = tuple(c1[c1[:, :, 0].argmin()][0])
