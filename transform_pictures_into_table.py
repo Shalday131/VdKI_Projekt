@@ -25,6 +25,6 @@ for idx, label in enumerate(imginfo.labels):
 
 pd_imgdata = imginfo.get_feature_names(feature_names)
 
-pd_imgdata.to_excel("Features.xlsx")
-pd_imgdata.to_csv('Features.csv')
+#pd_imgdata.to_excel("Features.xlsx")
+#pd_imgdata.to_csv('Features.csv')
 

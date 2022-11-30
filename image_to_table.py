@@ -19,6 +19,14 @@ class imgorga:
             imgs = [os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
             self.image_paths.append(imgs)
 
+        print('origin: ', self.origin)
+        print('labels: ', self.labels)
+        print('label_paths: ', self.label_paths)
+        print('image_paths: ', self.image_paths)
+        print('numericdata_list: ', self.numericdata_list)
+        print('feature_names: ', self.feature_names)
+        print('panda_frame: ', self.panda_frame)
+
     def get_feature_names(self, features_names):
         """Gesammelte Vekotren als Panda_Frame ausgeben für die Weiterverarbeitung"""
         self.panda_frame = pd.DataFrame(self.numericdata_list, columns=features_names)
