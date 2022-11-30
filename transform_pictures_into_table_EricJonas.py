@@ -1,6 +1,6 @@
-import image_to_table as itt
+import image_to_table_EricJonas as itt
 import cv2 as cv
-import preimg
+import preimg_EricJonas as preimg
 
 imginfo = itt.imgorga("Bilder")
 imgextract = preimg.preimg()
