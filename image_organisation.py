@@ -4,7 +4,6 @@ import cv2 as cv
 class image_organisation:
 
     def __init__(self):
-
         self.labels = []
         self.image_paths = []
         self.images = []
@@ -19,7 +18,7 @@ class image_organisation:
                     self.image_paths.append(image_path)             # hängt Pfad der Datei an image_paths an
 
     def get_images(self):                                           # Funktion gibt Bilder in einem Array zurück
-        self.images.clear()                                         # falls die Funktion öfters aufgerufen wird, wird der Array zuerst gecleart
+        self.images.clear()                                         # falls die Funktion öfters aufgerufen wird, wird der Array zuerst gecleert
         for image_path in self.image_paths:                         # iteriere durch alle image_paths
             self.images.append(cv.imread(image_path))               # lese Bild von image_path ein und hänge das Bild an self.images an
         return self.images                                          # gibt das Array self.images zurück
