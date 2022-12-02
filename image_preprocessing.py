@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from matplotlib import pyplot as plt
 
 class image_preprocessing:
 
@@ -44,24 +45,41 @@ class image_preprocessing:
     def get_modified_images(self):
         return self.images
 
-
+    # detektiert Kreise im Bild
     def HoughCircles(self):
-        circles = cv.HoughCircles(self.images[0], method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200) # hier können die Parameter der Kreisfindung eingestellt werden
-        if circles is None:
-            return
-        print(circles)
-        print(len(circles))
-        """
-        circles = np.uint16(np.around(circles))
-        for i in circles[0, :]:
-            # draw the outer circle
-            cv.circle(self.images[0], (i[0], i[1]), i[2], (0, 255, 0), 2)
-            # draw the center of the circle
-            cv.circle(self.images[0], (i[0], i[1]), 2, (0, 0, 255), 3)
-        cv.imshow('detected circles', self.images[0])
-        cv.waitKey(0)
-        cv.destroyAllWindows()
-        print(circles)
-        """
+        circles = []
+        for image in self.images:
+            circles.append(cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200)) # hier können die Parameter der Kreisfindung eingestellt werden
+            if circles is None:
+                return
+            """
+            circles = np.uint16(np.around(circles))
+            for i in circles[0, :]:
+                # draw the outer circle
+                cv.circle(self.images[0], (i[0], i[1]), i[2], (0, 255, 0), 2)
+                # draw the center of the circle
+                cv.circle(self.images[0], (i[0], i[1]), 2, (0, 0, 255), 3)
+            cv.imshow('detected circles', self.images[0])
+            cv.waitKey(0)
+            cv.destroyAllWindows()
+            print(circles)
+            """
         return len(circles)
 
+    # detektiert Ecken im Bild
+    def corner_tracker(self):
+        corners = []
+        for image in self.images:
+            corners.append(cv.goodFeaturesToTrack(image, 1000, 0.65, 5))
+            """
+            if corners is None:
+                return
+            corners = np.int0(corners)
+            for i in corners:
+                x, y = i.ravel()
+                cv.circle(self.images[20], (x, y), 3, 255, -1)
+            cv.imshow("Corners", self.images[20])
+            cv.waitKey(0)
+            cv.destroyAllWindows()
+            """
+        return (len(corners))

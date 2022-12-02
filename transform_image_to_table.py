@@ -13,11 +13,11 @@ test_imgprep = imgprep.image_preprocessing(images)
 test_imgprep.resize()
 test_imgprep.grayscale()
 test_imgprep.blur()
-#test_imgprep.thresholding()
+# test_imgprep.thresholding()
 
 modified_images = test_imgprep.get_modified_images()
 # cv.imshow("test", modified_images[50])
 # cv.waitKey(0)
 # cv.destroyAllWindows()
 
-test_imgprep.HoughCircles()
+test_imgprep.corner_tracker()
