@@ -47,10 +47,10 @@ class image_preprocessing:
 
     # detektiert Kreise im Bild
     def HoughCircles(self):
-        circles = []
+        circles_per_image = []
         for image in self.images:
-            circles.append(cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200)) # hier können die Parameter der Kreisfindung eingestellt werden
-            if circles is None:
+            circles_per_image.append(len(cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200))) # hier können die Parameter der Kreisfindung eingestellt werden
+            if circles_per_image is None:
                 return
             """
             circles = np.uint16(np.around(circles))
@@ -64,13 +64,13 @@ class image_preprocessing:
             cv.destroyAllWindows()
             print(circles)
             """
-        return len(circles)
+        return circles_per_image
 
     # detektiert Ecken im Bild
     def corner_tracker(self):
-        corners = []
+        corners_per_image = []
         for image in self.images:
-            corners.append(cv.goodFeaturesToTrack(image, 1000, 0.65, 5))
+            corners_per_image.append(len(cv.goodFeaturesToTrack(image, 1000, 0.65, 5)))
             """
             if corners is None:
                 return
@@ -82,4 +82,4 @@ class image_preprocessing:
             cv.waitKey(0)
             cv.destroyAllWindows()
             """
-        return (len(corners))
+        return corners_per_image
