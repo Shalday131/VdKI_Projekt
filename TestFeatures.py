@@ -7,7 +7,7 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
-        self.current_index = 96
+        self.current_index = 0
         self.edge_image = None
 
     def find_circles_test(self):
