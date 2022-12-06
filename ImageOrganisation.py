@@ -1,7 +1,7 @@
 import os
 import cv2 as cv
 
-class image_organisation:
+class ImageOrganisation:
 
     def __init__(self):
         self.labels = []

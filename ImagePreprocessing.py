@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 
-class image_preprocessing:
+class ImagePreprocessing:
 
     def __init__(self, images):
         self.images = images
@@ -46,28 +46,16 @@ class image_preprocessing:
         return self.images
 
     # detektiert Kreise im Bild
-    def HoughCircles(self):
+    def find_circles(self):
         circles_per_image = []
         for image in self.images:
             circles_per_image.append(len(cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200))) # hier können die Parameter der Kreisfindung eingestellt werden
             if circles_per_image is None:
                 return
-            """
-            circles = np.uint16(np.around(circles))
-            for i in circles[0, :]:
-                # draw the outer circle
-                cv.circle(self.images[0], (i[0], i[1]), i[2], (0, 255, 0), 2)
-                # draw the center of the circle
-                cv.circle(self.images[0], (i[0], i[1]), 2, (0, 0, 255), 3)
-            cv.imshow('detected circles', self.images[0])
-            cv.waitKey(0)
-            cv.destroyAllWindows()
-            print(circles)
-            """
         return circles_per_image
 
     # detektiert Ecken im Bild
-    def corner_tracker(self):
+    def find_corners(self):
         corners_per_image = []
         for image in self.images:
             corners_per_image.append(len(cv.goodFeaturesToTrack(image, 1000, 0.65, 5)))
