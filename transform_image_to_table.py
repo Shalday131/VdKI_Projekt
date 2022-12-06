@@ -23,6 +23,8 @@ test_features = TestFeatures(modified_images)
 test_features.find_circles_test()
 test_features.find_corners_test()
 test_features.find_edges()
+test_features.SIFT()
+test_features.find_contours()
 
 # cv.imshow("test", modified_images[50])
 # cv.waitKey(0)

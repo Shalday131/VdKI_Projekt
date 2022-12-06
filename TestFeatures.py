@@ -45,3 +45,20 @@ class TestFeatures:
         plt.subplot(122), plt.imshow(edges, cmap='gray')
         plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
         plt.show()
+
+    def SIFT(self):
+        clone = copy.deepcopy(self.images[20])
+        sift = cv.SIFT_create()
+        kp = sift.detect(clone, None)
+        clone = cv.drawKeypoints(clone, kp, self.images[20])
+        cv.imshow('detected circles', clone)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+    def find_contours(self):
+        clone = copy.deepcopy(self.images[20])
+        ret, thresh = cv.threshold(clone, 127, 255, 0)
+        contours, hierarchy = cv.findContours(thresh, 1, 2)
+        cnt = contours[0]
+        M = cv.moments(cnt)
+        print(M)
