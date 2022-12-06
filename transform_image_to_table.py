@@ -22,6 +22,7 @@ modified_images = test_imgprep.get_modified_images()
 test_features = TestFeatures(modified_images)
 test_features.find_circles_test()
 test_features.find_corners_test()
+test_features.find_edges()
 
 # cv.imshow("test", modified_images[50])
 # cv.waitKey(0)

@@ -59,15 +59,4 @@ class ImagePreprocessing:
         corners_per_image = []
         for image in self.images:
             corners_per_image.append(len(cv.goodFeaturesToTrack(image, 1000, 0.65, 5)))
-            """
-            if corners is None:
-                return
-            corners = np.int0(corners)
-            for i in corners:
-                x, y = i.ravel()
-                cv.circle(self.images[20], (x, y), 3, 255, -1)
-            cv.imshow("Corners", self.images[20])
-            cv.waitKey(0)
-            cv.destroyAllWindows()
-            """
         return corners_per_image

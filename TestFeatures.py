@@ -12,6 +12,7 @@ class TestFeatures:
         clone = copy.deepcopy(self.images[20])
         circles = cv.HoughCircles(clone, cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200)
         circles = np.uint16(np.around(circles))
+        # Bild darstellen
         for i in circles[0, :]:
             # draw the outer circle
             cv.circle(clone, (i[0], i[1]), i[2], (0, 255, 0), 2)
@@ -26,9 +27,21 @@ class TestFeatures:
         clone = copy.deepcopy(self.images[20])
         corners = cv.goodFeaturesToTrack(clone, 1000, 0.65, 5)
         corners = np.int0(corners)
+        # Bild darstellen
         for i in corners:
             x, y = i.ravel()
             cv.circle(clone, (x, y), 3, 255, -1)
         cv.imshow("Corners", clone)
         cv.waitKey(0)
         cv.destroyAllWindows()
+
+    def find_edges(self):
+        clone = copy.deepcopy(self.images[20])
+        edges = cv.Canny(clone, 8, 300)
+        print(edges)
+        # Bild darstellen
+        plt.subplot(121), plt.imshow(clone, cmap='gray')
+        plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+        plt.subplot(122), plt.imshow(edges, cmap='gray')
+        plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+        plt.show()
