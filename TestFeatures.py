@@ -7,6 +7,7 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
+        self.edge_image = None
 
     def find_circles_test(self):
         clone = copy.deepcopy(self.images[20])
@@ -36,8 +37,9 @@ class TestFeatures:
         cv.destroyAllWindows()
 
     def find_edges(self):
-        clone = copy.deepcopy(self.images[20])
+        clone = copy.deepcopy(self.images[0])
         edges = cv.Canny(clone, 8, 300)
+        self.edge_image = edges
         print(edges)
         # Bild darstellen
         plt.subplot(121), plt.imshow(clone, cmap='gray')
@@ -51,14 +53,44 @@ class TestFeatures:
         sift = cv.SIFT_create()
         kp = sift.detect(clone, None)
         clone = cv.drawKeypoints(clone, kp, self.images[20])
-        cv.imshow('detected circles', clone)
+        cv.imshow('SIFT', clone)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
     def find_contours(self):
-        clone = copy.deepcopy(self.images[20])
-        ret, thresh = cv.threshold(clone, 127, 255, 0)
-        contours, hierarchy = cv.findContours(thresh, 1, 2)
+        img = self.edge_image
+
+        # find the contours
+        contours, _ = cv.findContours(self.edge_image, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+        # take the first contour
         cnt = contours[0]
-        M = cv.moments(cnt)
-        print(M)
+        print(cnt)
+        print(contours)
+
+        x_coordinate, y_coordinate, x2, y2 = cv.boundingRect(cnt)
+        x2 = 0
+        y2 = 0
+        # compute the bounding rectangle of the contour
+        for cnt2 in contours:
+            x, y, w, h = cv.boundingRect(cnt2)
+            if x < x_coordinate:
+                x_coordinate = x
+            if y < y_coordinate:
+                y_coordinate = y
+            if x+w > x2:
+                x2 = x+w
+            if y+h > y2:
+                y2 = y+h
+        print(x_coordinate, y_coordinate, x2, y2)
+
+        # draw contour
+        img = cv.drawContours(img, [cnt], 0, (0, 255, 255), 2)
+
+        # draw the bounding rectangle
+        img = cv.rectangle(img, (x_coordinate, y_coordinate), (x2, y2), (255, 255, 255), 2)
+
+        # display the image with bounding rectangle drawn on it
+        cv.imshow("Bounding Rectangle", img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
