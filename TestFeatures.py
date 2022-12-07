@@ -14,6 +14,8 @@ class TestFeatures:
         clone = copy.deepcopy(self.images[self.current_index])
         circles = cv.HoughCircles(clone, cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200)
         circles = np.uint16(np.around(circles))
+        print("Kreise: ", circles)
+        print("Anzahl Kreise: ", circles.size/3) # für jeden Kreis werden 3 Zahlen gespeichert --> durch 3 teilen
         # Bild darstellen
         for i in circles[0, :]:
             # draw the outer circle

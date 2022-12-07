@@ -35,6 +35,5 @@ test_features = TestFeatures(modified_images)
 # test_features.find_contours_test()
 
 # Datafreame erzeugen
-
 df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Labels": labels})
-df.to_excel("Features_Test.xlsx")
+# df.to_excel("Features_Test.xlsx")

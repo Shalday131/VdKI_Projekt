@@ -44,12 +44,18 @@ class ImagePreprocessing:
 
     # detektiert Kreise im Bild
     def find_circles(self):
+        num_circles_per_image = []
         circles_per_image = []
         for image in self.images:
-            circles_per_image.append(len(cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200))) # hier können die Parameter der Kreisfindung eingestellt werden
+            circles_per_image = cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200) # hier können die Parameter der Kreisfindung eingestellt werden
+            circles_per_image = np.uint16(np.around(circles_per_image))
             if circles_per_image is None:
                 return
-        return circles_per_image
+            else:
+                circles_per_image = circles_per_image.size/3
+            num_circles_per_image.append(circles_per_image)
+        print(num_circles_per_image)
+        return num_circles_per_image
 
     # detektiert Ecken im Bild
     def find_corners(self):
