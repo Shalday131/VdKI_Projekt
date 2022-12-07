@@ -24,10 +24,13 @@ modified_images = test_imgprep.get_modified_images()
 
 # Features rauslesen
 num_circles = test_imgprep.find_circles()
+print("Anzahl Kreise: ", num_circles)
+print(type(num_circles))
 aspect_ratio = test_imgprep.find_contours()
+print(type(aspect_ratio))
 
 # Feature Tests:
-test_features = TestFeatures(modified_images)
+# test_features = TestFeatures(modified_images)
 # test_features.find_circles_test()
 # test_features.find_corners_test()
 # test_features.find_edges_test()
@@ -36,4 +39,4 @@ test_features = TestFeatures(modified_images)
 
 # Datafreame erzeugen
 df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Labels": labels})
-# df.to_excel("Features_Test.xlsx")
+df.to_excel("Features_Test.xlsx")

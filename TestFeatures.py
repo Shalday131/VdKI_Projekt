@@ -43,7 +43,6 @@ class TestFeatures:
         clone = copy.deepcopy(self.images[self.current_index])
         edges = cv.Canny(clone, 100, 300)
         self.edge_image = edges
-        print(edges)
         # Bild darstellen
         plt.subplot(121), plt.imshow(clone, cmap='gray')
         plt.title('Original Image'), plt.xticks([]), plt.yticks([])
@@ -68,8 +67,6 @@ class TestFeatures:
 
         # take the first contour
         cnt = contours[0]
-        print(cnt)
-        print(contours)
 
         x_left, y_bottom, x_right, y_top = cv.boundingRect(cnt)
         x_right = 0
@@ -85,7 +82,6 @@ class TestFeatures:
                 x_right = x+w
             if y+h > y_top:            # suche größtes y
                 y_top = y+h
-        print(x_left, y_bottom, x_right, y_top)
 
         # draw contour
         img = cv.drawContours(img, [cnt], 0, (0, 255, 255), 2)
