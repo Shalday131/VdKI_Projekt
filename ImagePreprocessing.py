@@ -50,15 +50,23 @@ class ImagePreprocessing:
     # detektiert Kreise im Bild
     def find_circles(self):
         num_circles_per_image = []
-        circles_per_image = []
+        image_index = 0
         for image in self.images:
             circles_per_image = cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200) # hier können die Parameter der Kreisfindung eingestellt werden
+            circles_per_image = np.uint16(np.around(circles_per_image))
+            circles_per_image = circles_per_image[0]
             if circles_per_image is None:
-                return
+                num_circles_per_image.append(0)
             else:
-                circles_per_image = np.uint16(np.around(circles_per_image))
-                circles_per_image = circles_per_image.size/3
-            num_circles_per_image.append(circles_per_image)
+                circle_counter = 0
+                for circle in circles_per_image:
+                    if circle[1] <= (self.y_top[image_index]+self.y_bottom[image_index])/2:
+                        if circle[1] >= self.y_bottom[image_index]:
+                            if circle[0] >= self.x_left[image_index]:
+                                if circle[0] <= self.x_right[image_index]:
+                                    circle_counter += 1
+                num_circles_per_image.append(circle_counter)
+            image_index += 1
         return num_circles_per_image
 
     # detektiert Ecken im Bild
@@ -78,21 +86,25 @@ class ImagePreprocessing:
             # take the first contour
             cnt = contours[0]
 
-            self.x_left, self.y_bottom, self.x_right, self.y_top = cv.boundingRect(cnt)
-            self.x_right = 0
-            self.y_top = 0
+            x_left, y_bottom, x_right, y_top = cv.boundingRect(cnt)
+            x_right = 0
+            y_top = 0
             for cnt2 in contours:   # berechnet das kleinste Rechteck, dass das Objekt im Bild umgibt
                 x, y, w, h = cv.boundingRect(cnt2)
-                if x < self.x_left:    # suche kleinstes x
-                    self.x_left = x
-                if y < self.y_bottom:    # suche kleinstes y
-                    self.y_bottom = y
-                if x+w > self.x_right:            # suche größtes x
-                    self.x_right = x+w
-                if y+h > self.y_top:            # suche größtes y
-                    self.y_top = y+h
-            width = self.x_right - self.x_left
-            height = self.y_top - self.y_bottom
+                if x < x_left:    # suche kleinstes x
+                    x_left = x
+                if y < y_bottom:    # suche kleinstes y
+                    y_bottom = y
+                if x+w > x_right:            # suche größtes x
+                    x_right = x+w
+                if y+h > y_top:            # suche größtes y
+                    y_top = y+h
+            self.x_left.append(x_left)
+            self.x_right.append(x_right)
+            self.y_bottom.append(y_bottom)
+            self.y_top.append(y_top)
+            width = x_right - x_left
+            height = y_top - y_bottom
             current_aspect_ratio = width/height
             aspect_ratios.append(current_aspect_ratio)
         return aspect_ratios

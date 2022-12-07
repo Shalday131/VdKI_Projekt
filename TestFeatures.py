@@ -7,17 +7,18 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
-        self.current_index = 0
+        self.current_index = 81
         self.edge_image = None
 
     def find_circles_test(self):
         clone = copy.deepcopy(self.images[self.current_index])
         circles = cv.HoughCircles(clone, cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200)
         circles = np.uint16(np.around(circles))
+        circles = circles[0]
         print("Kreise: ", circles)
-        print("Anzahl Kreise: ", circles.size/3) # für jeden Kreis werden 3 Zahlen gespeichert --> durch 3 teilen
+        print("Anzahl Kreise: ", len(circles)) # für jeden Kreis werden 3 Zahlen gespeichert --> durch 3 teilen
         # Bild darstellen
-        for i in circles[0, :]:
+        for i in circles:
             # draw the outer circle
             cv.circle(clone, (i[0], i[1]), i[2], (0, 255, 0), 2)
             # draw the center of the circle
@@ -82,7 +83,7 @@ class TestFeatures:
                 x_right = x+w
             if y+h > y_top:            # suche größtes y
                 y_top = y+h
-
+        print((y_top+y_bottom)/2)
         # draw contour
         img = cv.drawContours(img, [cnt], 0, (0, 255, 255), 2)
 

@@ -21,12 +21,13 @@ class ImageOrganisation:
     def get_images(self):                                           # Funktion gibt Bilder in einem Array zurück
         self.images.clear()                                         # falls die Funktion öfters aufgerufen wird, wird der Array zuerst gecleert
         for image_path in self.image_paths:                         # iteriere durch alle image_paths
-            self.images.append(cv.imread(image_path))               # lese Bild von image_path ein und hänge das Bild an self.images an
+            self.images.append(cv.imread(image_path))              # lese Bild von image_path ein und hänge das Bild an self.images an
+        print("Anzahl der eingelesenen Bilder: ", len(self.images))
         return self.images                                          # gibt das Array self.images zurück
 
     def get_labels(self):
         for image_path in self.image_paths:
-            self.label_per_image.append(os.path.basename(os.path.dirname((image_path))))
+            self.label_per_image.append(os.path.basename(os.path.dirname(image_path)))
         return self.label_per_image
 
     def print(self):
