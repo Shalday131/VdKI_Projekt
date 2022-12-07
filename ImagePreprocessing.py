@@ -34,11 +34,8 @@ class ImagePreprocessing:
     # Unterteilt das Bild in 0- und 255-Werte nach einem bestimmten Schwellwert
     def thresholding(self):
         thresholded_images = []
-        # ret, th1 = cv.threshold(self.images, 127, 255, cv.THRESH_BINARY)
         for image in self.images:
-            thresholded_images.append(
-                cv.adaptiveThreshold(image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11,
-                                     2))  # hier kann der Schwellwert bearbeitet werden
+            thresholded_images.append(cv.adaptiveThreshold(image, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 11, 2))  # hier kann der Schwellwert bearbeitet werden
         self.images = thresholded_images
 
     # gibt die bearbeiteten Bilder zurück
@@ -60,3 +57,38 @@ class ImagePreprocessing:
         for image in self.images:
             corners_per_image.append(len(cv.goodFeaturesToTrack(image, 1000, 0.65, 5)))
         return corners_per_image
+
+    # findet das kleinste Rechteck, dass das Objekt umgibt
+    def find_contours(self):
+        aspect_ratio = []
+        for image in self.images:
+            edges = cv.Canny(image, 100, 300)   # hebt die Umrisse des Objekts auf dem Bild hervor
+            contours, _ = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) # finde alle Konturen des Objekts im Bild
+
+            # take the first contour
+            cnt = contours[0]
+
+            x_left, y_bottom, x_right, y_top = cv.boundingRect(cnt)
+            x_right = 0
+            y_top = 0
+            for cnt2 in contours:   # berechnet das kleinste Rechteck, dass das Objekt im Bild umgibt
+                x, y, w, h = cv.boundingRect(cnt2)
+                if x < x_left:    # suche kleinstes x
+                    x_left = x
+                if y < y_bottom:    # suche kleinstes y
+                    y_bottom = y
+                if x+w > x_right:            # suche größtes x
+                    x_right = x+w
+                if y+h > y_top:            # suche größtes y
+                    y_top = y+h
+            print(x_left, x_right, y_bottom, y_top)
+            # draw contour
+            edges = cv.drawContours(edges, [cnt], 0, (0, 255, 255), 2)
+
+            # draw the bounding rectangle
+            edges = cv.rectangle(edges, (x_left, y_bottom), (x_right, y_top), (255, 50, 255), 2)
+
+            # display the image with bounding rectangle drawn on it
+            cv.imshow("Bounding Rectangle", edges)
+            cv.waitKey(0)
+            cv.destroyAllWindows()

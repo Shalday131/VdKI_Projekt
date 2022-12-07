@@ -37,7 +37,7 @@ class TestFeatures:
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    def find_edges(self):
+    def find_edges_test(self):
         clone = copy.deepcopy(self.images[self.current_index])
         edges = cv.Canny(clone, 100, 300)
         self.edge_image = edges
@@ -49,7 +49,7 @@ class TestFeatures:
         plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
         plt.show()
 
-    def SIFT(self):
+    def SIFT_test(self):
         clone = copy.deepcopy(self.images[self.current_index])
         sift = cv.SIFT_create()
         kp = sift.detect(clone, None)
@@ -58,38 +58,38 @@ class TestFeatures:
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    def find_contours(self):
+    def find_contours_test(self):
         img = self.edge_image
 
         # find the contours
-        contours, _ = cv.findContours(self.edge_image, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv.findContours(img, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
         # take the first contour
         cnt = contours[0]
         print(cnt)
         print(contours)
 
-        x_coordinate, y_coordinate, x2, y2 = cv.boundingRect(cnt)
-        x2 = 0
-        y2 = 0
+        x_left, y_bottom, x_right, y_top = cv.boundingRect(cnt)
+        x_right = 0
+        y_top = 0
         # compute the bounding rectangle of the contour
         for cnt2 in contours:
             x, y, w, h = cv.boundingRect(cnt2)
-            if x < x_coordinate:    # suche kleinstes x
-                x_coordinate = x
-            if y < y_coordinate:    # suche kleinstes y
-                y_coordinate = y
-            if x+w > x2:            # suche größtes x
-                x2 = x+w
-            if y+h > y2:            # suche größtes y
-                y2 = y+h
-        print(x_coordinate, y_coordinate, x2, y2)
+            if x < x_left:    # suche kleinstes x
+                x_left = x
+            if y < y_bottom:    # suche kleinstes y
+                y_bottom = y
+            if x+w > x_right:            # suche größtes x
+                x_right = x+w
+            if y+h > y_top:            # suche größtes y
+                y_top = y+h
+        print(x_left, y_bottom, x_right, y_top)
 
         # draw contour
         img = cv.drawContours(img, [cnt], 0, (0, 255, 255), 2)
 
         # draw the bounding rectangle
-        img = cv.rectangle(img, (x_coordinate, y_coordinate), (x2, y2), (255, 50, 255), 2)
+        img = cv.rectangle(img, (x_left, y_bottom), (x_right, y_top), (255, 50, 255), 2)
 
         # display the image with bounding rectangle drawn on it
         cv.imshow("Bounding Rectangle", img)
