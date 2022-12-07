@@ -60,7 +60,7 @@ class ImagePreprocessing:
 
     # findet das kleinste Rechteck, dass das Objekt umgibt
     def find_contours(self):
-        aspect_ratio = []
+        aspect_ratios = []
         for image in self.images:
             edges = cv.Canny(image, 100, 300)   # hebt die Umrisse des Objekts auf dem Bild hervor
             contours, _ = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) # finde alle Konturen des Objekts im Bild
@@ -81,14 +81,8 @@ class ImagePreprocessing:
                     x_right = x+w
                 if y+h > y_top:            # suche größtes y
                     y_top = y+h
-            print(x_left, x_right, y_bottom, y_top)
-            # draw contour
-            edges = cv.drawContours(edges, [cnt], 0, (0, 255, 255), 2)
-
-            # draw the bounding rectangle
-            edges = cv.rectangle(edges, (x_left, y_bottom), (x_right, y_top), (255, 50, 255), 2)
-
-            # display the image with bounding rectangle drawn on it
-            cv.imshow("Bounding Rectangle", edges)
-            cv.waitKey(0)
-            cv.destroyAllWindows()
+            width = x_right - x_left
+            height = y_top - y_bottom
+            current_aspect_ratio = width/height
+            aspect_ratios.append(current_aspect_ratio)
+        return aspect_ratios

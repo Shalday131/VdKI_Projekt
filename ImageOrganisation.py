@@ -7,6 +7,7 @@ class ImageOrganisation:
         self.labels = []
         self.image_paths = []
         self.images = []
+        self.label_per_image = []
 
         for label_name in os.listdir("Bilder"):                     # schreibt Namen der Ordner und Dateien, die sich unter "Bilder" befinden in label_name
             label_path = os.path.join("Bilder", label_name)         # hängt den label_name an den Pfad "Bilder" ran und generiert den Pfad für alles was sich unter "Bilder" befindet
@@ -22,6 +23,11 @@ class ImageOrganisation:
         for image_path in self.image_paths:                         # iteriere durch alle image_paths
             self.images.append(cv.imread(image_path))               # lese Bild von image_path ein und hänge das Bild an self.images an
         return self.images                                          # gibt das Array self.images zurück
+
+    def get_labels(self):
+        for image_path in self.image_paths:
+            self.label_per_image.append(os.path.basename(os.path.dirname((image_path))))
+        return self.label_per_image
 
     def print(self):
         print(self.labels)
