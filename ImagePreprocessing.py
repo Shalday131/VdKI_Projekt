@@ -71,10 +71,24 @@ class ImagePreprocessing:
 
     # detektiert Ecken im Bild
     def find_corners(self):
-        corners_per_image = []
+        num_corners_per_image = []
+        image_index = 0
         for image in self.images:
-            corners_per_image.append(len(cv.goodFeaturesToTrack(image, 1000, 0.65, 5)))
-        return corners_per_image
+            corners_per_image = cv.goodFeaturesToTrack(image, 1000, 0.65, 5)
+            if corners_per_image is None:
+                num_corners_per_image.append(0)
+            else:
+                corner_counter = 0
+                for corner in corners_per_image:
+                    corner = corner[0]
+                    if corner[1] <= (self.y_top[image_index] + self.y_bottom[image_index]) / 2:
+                        if corner[1] >= self.y_bottom[image_index]:
+                            if corner[0] >= self.x_left[image_index]:
+                                if corner[0] <= self.x_right[image_index]:
+                                    corner_counter += 1
+                num_corners_per_image.append(corner_counter)
+            image_index += 1
+        return num_corners_per_image
 
     # findet das kleinste Rechteck, dass das Objekt umgibt
     def find_contours(self):

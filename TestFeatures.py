@@ -7,7 +7,7 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
-        self.current_index = 81
+        self.current_index = 10
         self.edge_image = None
 
     def find_circles_test(self):
@@ -32,6 +32,7 @@ class TestFeatures:
         clone = copy.deepcopy(self.images[self.current_index])
         corners = cv.goodFeaturesToTrack(clone, 1000, 0.65, 5)
         corners = np.int0(corners)
+        print(corners)
         # Bild darstellen
         for i in corners:
             x, y = i.ravel()
@@ -83,6 +84,7 @@ class TestFeatures:
                 x_right = x+w
             if y+h > y_top:            # suche größtes y
                 y_top = y+h
+        print(y_top, y_bottom)
         print((y_top+y_bottom)/2)
         # draw contour
         img = cv.drawContours(img, [cnt], 0, (0, 255, 255), 2)

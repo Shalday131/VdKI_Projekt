@@ -23,18 +23,19 @@ test_imgprep.blur()
 modified_images = test_imgprep.get_modified_images()
 
 # Features rauslesen
-aspect_ratio = test_imgprep.find_contours() # hier werden die Eckpunkte der Rechtecke berechnet
+aspect_ratio = test_imgprep.find_contours() # hier werden  unter anderem die Eckpunkte der Rechtecke berechnet --> diese Funktion muss immer vor den anderen aufgerufen werden
 num_circles = test_imgprep.find_circles()
+num_corners = test_imgprep.find_corners()
 
 
 # Feature Tests:
 test_features = TestFeatures(modified_images)
 # test_features.find_circles_test()
-# test_features.find_corners_test()
+test_features.find_corners_test()
 test_features.find_edges_test()
 # test_features.SIFT_test()
 test_features.find_contours_test()
 
 # Datafreame erzeugen
-df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Labels": labels})
+df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Anzahl Ecken": num_corners, "Labels": labels})
 df.to_excel("Features_Test.xlsx")
