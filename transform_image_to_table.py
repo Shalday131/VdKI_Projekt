@@ -33,10 +33,11 @@ num_keypoints = test_imgprep.find_keypoint()
 test_features = TestFeatures(modified_images)
 # test_features.find_circles_test()
 # test_features.find_corners_test()
-# test_features.find_edges_test()
-test_features.SIFT_test()
+test_features.find_edges_test()
+# test_features.SIFT_test()
 # test_features.find_contours_test()
+test_features.find_lines_test()
 
-# Datafreame erzeugen
+# Datafreame mit Features erzeugen
 df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Anzahl Ecken": num_corners, "Anzahl Keypoints": num_keypoints, "Labels": labels})
-df.to_excel("Features_Test.xlsx")
+#df.to_excel("Features_Test.xlsx")

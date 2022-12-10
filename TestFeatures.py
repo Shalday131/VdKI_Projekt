@@ -106,3 +106,16 @@ class TestFeatures:
         cv.imshow("Bounding Rectangle", img)
         cv.waitKey(0)
         cv.destroyAllWindows()
+
+    def find_lines_test(self):
+        clone = copy.deepcopy(self.images[self.current_index])
+        edges = cv.Canny(clone, 100, 300, apertureSize=3)
+        lines = cv.HoughLinesP(edges, rho=1, theta=1 * np.pi / 180, threshold=50, minLineLength=50, maxLineGap=10)
+        print(lines)
+        print(len(lines))
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            cv.line(clone, (x1, y1), (x2, y2), (255, 255, 255), 2)
+        cv.imshow("lines", clone)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
