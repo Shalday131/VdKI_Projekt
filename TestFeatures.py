@@ -7,7 +7,7 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
-        self.current_index = 10
+        self.current_index = 98
         self.edge_image = None
 
     def find_circles_test(self):
@@ -55,8 +55,18 @@ class TestFeatures:
     def SIFT_test(self):
         clone = copy.deepcopy(self.images[self.current_index])
         sift = cv.SIFT_create()
+        print(sift)
         kp = sift.detect(clone, None)
-        clone = cv.drawKeypoints(clone, kp, self.images[self.current_index])
+        print(kp)
+        x = []
+        y = []
+        for keypoint in kp:             # Konvertiert die Keypoints in x- und y- Koordinaten
+            x.append(keypoint.pt[0])
+            y.append(keypoint.pt[1])
+        print("x: ", x)
+        print("y: ", y)
+        # Zeichnet die Features in das Bild
+        clone = cv.drawKeypoints(clone, kp, self.images[self.current_index], flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
         cv.imshow('SIFT', clone)
         cv.waitKey(0)
         cv.destroyAllWindows()

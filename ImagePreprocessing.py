@@ -122,3 +122,26 @@ class ImagePreprocessing:
             current_aspect_ratio = width/height
             aspect_ratios.append(current_aspect_ratio)
         return aspect_ratios
+
+    # detektiert Keypoints anhand Kontrastwechsel
+    def find_keypoint(self):
+        num_keypoints_per_image = []
+        image_index = 0
+        for image in self.images:
+            sift = cv.SIFT_create()
+            kp_per_image = sift.detect(image, None)
+            if kp_per_image is None:
+                num_keypoints_per_image.append(0)
+            else:
+                kp_counter = 0
+                for kp in kp_per_image:             # konvertiert die Keypoints in x- und y- Koordinaten
+                    x = kp.pt[0]
+                    y = kp.pt[1]
+                    if y <= (self.y_top[image_index] + self.y_bottom[image_index]) / 2:     # überprüft, ob die Keypoints auf der Flasche sind
+                        if y >= self.y_bottom[image_index]:
+                            if x >= self.x_left[image_index]:
+                                if x <= self.x_right[image_index]:
+                                    kp_counter += 1
+                num_keypoints_per_image.append(kp_counter)
+            image_index += 1
+        return num_keypoints_per_image
