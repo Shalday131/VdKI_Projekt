@@ -156,3 +156,22 @@ class TestFeatures:
         plt.subplot(224), plt.plot(hist_mask)
         plt.xlim([0, 256])
         plt.show()
+
+    def find_orbs_test(self):
+        clone = copy.deepcopy(self.images[self.current_index])
+        # Initiate ORB detector
+        orb = cv.ORB_create()
+        # find the keypoints with ORB
+        kp = orb.detect(clone, None)
+        # compute the descriptors with ORB
+        kp, des = orb.compute(clone, kp)
+        x = []
+        y = []
+        for keypoint in kp:  # Konvertiert die Keypoints in x- und y- Koordinaten
+            x.append(keypoint.pt[0])
+            y.append(keypoint.pt[1])
+        print("x: ", x)
+        print("y: ", y)
+        # draw only keypoints location,not size and orientation
+        img2 = cv.drawKeypoints(clone, kp, None, color=(0, 255, 0), flags=0)
+        plt.imshow(img2), plt.show()

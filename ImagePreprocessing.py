@@ -194,3 +194,30 @@ class ImagePreprocessing:
             max_values_per_image.append(hist[index_of_highest_peak])
             image_index += 1
         return max_values_per_image
+
+    # findet Orbs
+    def find_orbs(self):
+        num_orbs_per_image = []
+        image_index = 0
+        for image in self.images:
+            # Initiate ORB detector
+            orb = cv.ORB_create()
+            # find the keypoints with ORB
+            kp = orb.detect(image, None)
+            # compute the descriptors with ORB
+            kp_per_image, des = orb.compute(image, kp)
+            if kp_per_image is None:
+                num_orbs_per_image.append(0)
+            else:
+                orb_counter = 0
+                for kp in kp_per_image:  # konvertiert die Keypoints in x- und y- Koordinaten
+                    x = kp.pt[0]
+                    y = kp.pt[1]
+                    if y <= (self.y_top[image_index] + self.y_bottom[image_index]) / 2:  # überprüft, ob die Keypoints auf der Flasche sind
+                        if y >= self.y_bottom[image_index]:
+                            if x >= self.x_left[image_index]:
+                                if x <= self.x_right[image_index]:
+                                    orb_counter += 1
+                num_orbs_per_image.append(orb_counter)
+            image_index += 1
+        return num_orbs_per_image

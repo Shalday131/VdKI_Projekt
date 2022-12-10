@@ -28,6 +28,7 @@ num_circles = test_imgprep.find_circles()
 num_corners = test_imgprep.find_corners()
 num_keypoints = test_imgprep.find_keypoint()
 num_lines = test_imgprep.find_lines()
+num_orbs = test_imgprep.find_orbs()
 max_values_of_histogram = test_imgprep.find_max_value_of_histogram()
 
 
@@ -35,14 +36,15 @@ max_values_of_histogram = test_imgprep.find_max_value_of_histogram()
 test_features = TestFeatures(modified_images)
 # test_features.find_circles_test()
 # test_features.find_corners_test()
-test_features.find_edges_test()
+# test_features.find_edges_test()
 # test_features.SIFT_test()
-test_features.find_contours_test()
+# test_features.find_contours_test()
 # test_features.find_lines_test()
-test_features.create_histogram_test()
+# test_features.create_histogram_test()
+test_features.find_orbs_test()
 
 # Datafreame mit Features erzeugen
 df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Anzahl Ecken": num_corners,
-                   "Anzahl Keypoints": num_keypoints, "Anzahl Linien": num_lines,
+                   "Anzahl Keypoints": num_keypoints, "Anzahl Linien": num_lines, "Anzahl Orbs": num_orbs,
                    "maximaler Histogrammwert": max_values_of_histogram, "Labels": labels})
 df.to_excel("Features_Test.xlsx")
