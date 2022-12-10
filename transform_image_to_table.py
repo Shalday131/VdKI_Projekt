@@ -27,6 +27,7 @@ aspect_ratio = test_imgprep.find_contours() # hier werden  unter anderem die Eck
 num_circles = test_imgprep.find_circles()
 num_corners = test_imgprep.find_corners()
 num_keypoints = test_imgprep.find_keypoint()
+num_lines = test_imgprep.find_lines()
 
 
 # Feature Tests:
@@ -35,9 +36,10 @@ test_features = TestFeatures(modified_images)
 # test_features.find_corners_test()
 test_features.find_edges_test()
 # test_features.SIFT_test()
-# test_features.find_contours_test()
-test_features.find_lines_test()
+test_features.find_contours_test()
+# test_features.find_lines_test()
+test_features.create_histogram_test()
 
 # Datafreame mit Features erzeugen
-df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Anzahl Ecken": num_corners, "Anzahl Keypoints": num_keypoints, "Labels": labels})
-#df.to_excel("Features_Test.xlsx")
+df = pd.DataFrame({"Anzahl Kreise": num_circles, "Aspect Ratio": aspect_ratio, "Anzahl Ecken": num_corners, "Anzahl Keypoints": num_keypoints, "Anzahl Linien": num_lines, "Labels": labels})
+df.to_excel("Features_Test.xlsx")

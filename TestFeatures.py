@@ -7,8 +7,12 @@ class TestFeatures:
 
     def __init__(self, images):
         self.images = images
-        self.current_index = 98
+        self.current_index = 63
         self.edge_image = None
+        self.x_left = None
+        self.x_right = None
+        self.y_bottom = None
+        self.y_top = None
 
     def find_circles_test(self):
         clone = copy.deepcopy(self.images[self.current_index])
@@ -94,6 +98,10 @@ class TestFeatures:
                 x_right = x+w
             if y+h > y_top:            # suche größtes y
                 y_top = y+h
+        self.x_left = x_left
+        self.y_bottom = y_bottom
+        self.x_right = x_right
+        self.y_top = y_top
         print(y_top, y_bottom)
         print((y_top+y_bottom)/2)
         # draw contour
@@ -119,3 +127,32 @@ class TestFeatures:
         cv.imshow("lines", clone)
         cv.waitKey(0)
         cv.destroyAllWindows()
+
+    def create_histogram_test(self):
+        clone = copy.deepcopy(self.images[self.current_index])
+        # create a mask
+        mask = np.zeros(clone.shape[:2], np.uint8)
+        mask[self.y_bottom:self.y_top, self.x_left:self.x_right] = 255
+        masked_img = cv.bitwise_and(clone, clone, mask=mask)
+        # Calculate histogram with mask and without mask
+        # Check third argument for mask
+        hist_full = cv.calcHist([clone], [0], None, [256], [0, 256])
+        hist_mask = cv.calcHist([clone], [0], mask, [256], [0, 256])
+
+        # Convert histogram to simple list
+        hist = [val[0] for val in hist_mask]
+        # Generate a list of indices
+        indices = list(range(0, 256))
+        # Descending sort-by-key with histogram value as key
+        s = [(x, y) for y, x in sorted(zip(hist, indices), reverse=True)]
+        # Index of highest peak in histogram
+        index_of_highest_peak = s[0][0]
+        print("index of highest peak: ", index_of_highest_peak)
+        print(hist[index_of_highest_peak])
+
+        plt.subplot(221), plt.imshow(clone, 'gray')
+        plt.subplot(222), plt.imshow(mask, 'gray')
+        plt.subplot(223), plt.imshow(masked_img, 'gray')
+        plt.subplot(224), plt.plot(hist_mask)
+        plt.xlim([0, 256])
+        plt.show()

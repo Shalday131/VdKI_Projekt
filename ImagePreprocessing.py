@@ -145,3 +145,28 @@ class ImagePreprocessing:
                 num_keypoints_per_image.append(kp_counter)
             image_index += 1
         return num_keypoints_per_image
+
+    # detektiert Linien
+    def find_lines(self):
+        num_lines_per_image = []
+        image_index = 0
+        for image in self.images:
+            edges = cv.Canny(image, 100, 300, apertureSize=3)
+            lines_per_image = cv.HoughLinesP(edges, rho=1, theta=1 * np.pi / 180, threshold=50, minLineLength=50, maxLineGap=10)
+            if lines_per_image is None:
+                num_lines_per_image.append(0)
+            else:
+                line_counter = 0
+                for line in lines_per_image:
+                    line = line[0]
+                    if line[1] <= (self.y_top[image_index] + self.y_bottom[image_index]) / 2:  # überprüft, ob der Startpunkt der Linie auf der Flasche liegt
+                        if line[1] >= self.y_bottom[image_index]:
+                            line_counter += 1
+                    else:
+                        if line[3] <= (self.y_top[image_index] + self.y_bottom[
+                            image_index]) / 2:  # überprüft, ob der Startpunkt der Linie auf der Flasche liegt
+                            if line[3] >= self.y_bottom[image_index]:
+                                line_counter += 1
+                num_lines_per_image.append(line_counter)
+            image_index += 1
+        return num_lines_per_image
