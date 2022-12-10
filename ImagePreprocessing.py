@@ -170,3 +170,27 @@ class ImagePreprocessing:
                 num_lines_per_image.append(line_counter)
             image_index += 1
         return num_lines_per_image
+
+    # findet den maximalen Wert des Histogramms
+    def find_max_value_of_histogram(self):
+        max_values_per_image = []
+        image_index = 0
+        for image in self.images:
+            # create a mask
+            mask = np.zeros(image.shape[:2], np.uint8)
+            mask[self.y_bottom[image_index]:self.y_top[image_index], self.x_left[image_index]:self.x_right[image_index]] = 255
+            masked_img = cv.bitwise_and(image, image, mask=mask)
+            # Calculate histogram with mask and without mask
+            # Check third argument for mask
+            hist_mask = cv.calcHist([image], [0], mask, [256], [0, 256])
+            # Convert histogram to simple list
+            hist = [val[0] for val in hist_mask]
+            # Generate a list of indices
+            indices = list(range(0, 256))
+            # Descending sort-by-key with histogram value as key
+            s = [(x, y) for y, x in sorted(zip(hist, indices), reverse=True)]
+            # Index of highest peak in histogram
+            index_of_highest_peak = s[0][0]
+            max_values_per_image.append(hist[index_of_highest_peak])
+            image_index += 1
+        return max_values_per_image
