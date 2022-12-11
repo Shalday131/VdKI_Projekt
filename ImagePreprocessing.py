@@ -53,11 +53,12 @@ class ImagePreprocessing:
         image_index = 0
         for image in self.images:
             circles_per_image = cv.HoughCircles(image, method=cv.HOUGH_GRADIENT_ALT, dp=1.5, minDist=25, param1=140, param2=0.5, minRadius=1, maxRadius=200) # hier können die Parameter der Kreisfindung eingestellt werden
-            circles_per_image = np.uint16(np.around(circles_per_image))
-            circles_per_image = circles_per_image[0]
+            #circles_per_image = np.uint16(np.around(circles_per_image))
+            #circles_per_image = circles_per_image[0]
             if circles_per_image is None:
                 num_circles_per_image.append(0)
             else:
+                circles_per_image = circles_per_image[0]
                 circle_counter = 0
                 for circle in circles_per_image:
                     if circle[1] <= (self.y_top[image_index]+self.y_bottom[image_index])/2:
