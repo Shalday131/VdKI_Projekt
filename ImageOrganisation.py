@@ -1,5 +1,6 @@
 import os
 import cv2 as cv
+import pandas as pd
 
 class ImageOrganisation:
 
@@ -8,6 +9,7 @@ class ImageOrganisation:
         self.image_paths = []
         self.images = []
         self.label_per_image = []
+        self.data_list = []
 
         for label_name in os.listdir("Bilder"):                     # schreibt Namen der Ordner und Dateien, die sich unter "Bilder" befinden in label_name
             label_path = os.path.join("Bilder", label_name)         # hängt den label_name an den Pfad "Bilder" ran und generiert den Pfad für alles was sich unter "Bilder" befindet
@@ -25,12 +27,15 @@ class ImageOrganisation:
         print("Anzahl der eingelesenen Bilder: ", len(self.images))
         return self.images                                          # gibt das Array self.images zurück
 
-    def get_labels(self):
-        for image_path in self.image_paths:
-            self.label_per_image.append(os.path.basename(os.path.dirname(image_path)))
-        return self.label_per_image
+    def get_label(self, image_path):
+        label = os.path.basename(os.path.dirname(image_path))
+        return label
 
-    def print(self):
-        print(self.labels)
-        print(self.image_paths)
-        print(self.images)
+    # schreibt die gefundenen Features in eine Liste
+    def collect_features(self, data):
+        self.data_list.append(data)
+
+    # schreibt die gesammelten Daten in ein Dataframe
+    def get_dataframe(self, column_names):
+        df = pd.DataFrame(self.data_list, columns=column_names)
+        return df
