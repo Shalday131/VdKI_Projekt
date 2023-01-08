@@ -11,8 +11,8 @@ class ImageOrganisation:
         self.label_per_image = []
         self.data_list = []
 
-        for label_name in os.listdir("Bilder"):                     # schreibt Namen der Ordner und Dateien, die sich unter "Bilder" befinden in label_name
-            label_path = os.path.join("Bilder", label_name)         # hängt den label_name an den Pfad "Bilder" ran und generiert den Pfad für alles was sich unter "Bilder" befindet
+        for label_name in os.listdir("E:\Bilder VdKI\Bilder 3"):                     # schreibt Namen der Ordner und Dateien, die sich unter "Bilder" befinden in label_name
+            label_path = os.path.join("E:\Bilder VdKI\Bilder 3", label_name)         # hängt den label_name an den Pfad "Bilder" ran und generiert den Pfad für alles was sich unter "Bilder" befindet
             if os.path.isdir(label_path):                           # überprüft ob die einzelnen Pfade zu einem Ordner führen
                 self.labels.append(label_name)                      # fügt den Namen des Ordners in das Array self.labels hinzu
             for image_name in os.listdir(label_path):               # schreibt Namen der Ordner und Dateien, die sich unter label_path befinden in image_name

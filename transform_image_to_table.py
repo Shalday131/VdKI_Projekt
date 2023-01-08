@@ -45,7 +45,7 @@ for path in imgorga.image_paths:
 column_names = ["Anzahl Kreise", "Anzahl Ecken", "Anzahl Linien", "Anzahl Orbs", "Anzahl Keypoints", "Aspect Ratio",
                 "Maximaler Histogrammwert", "Label"]
 df = imgorga.get_dataframe(column_names)
-df.to_excel("Features_besser.xlsx")
+df.to_excel("Features 3.xlsx")
 
 # Feature Tests:
 # test_features = TestFeatures(modified_images)
