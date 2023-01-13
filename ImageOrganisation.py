@@ -1,3 +1,10 @@
+# Beschreibung der Funktionen
+# Diese Klasse wird verwendet um den Pfad von Bildern auszulesen. Zusätzlich wird hier der Ordnername, in dem
+# sich die Bilder befinden gespeichert. Des Weiteren werden hier die ausgelesenen Features in eine Excel-Datei
+# geschrieben.
+#
+# Autoren: Barabanow, Günter, Kauff, Sachweh
+
 import os
 import cv2 as cv
 import pandas as pd

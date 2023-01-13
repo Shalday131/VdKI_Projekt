@@ -1,3 +1,13 @@
+# Beschreibung der Funktionen
+# Dieses Programm ist dafür da, um aus einer unbekannten Anzahl an Bildern folgende Features rauszulesen:
+# Anzahl an Kreisen, Anzahl an Ecken, Anzahl an Linien, Anzahl an Orbs, Anzahl an Keypoints, Aspect Ratio
+# von dem kleinsten Rechteck, der das Object umgibt und der Maximale Histogrammwert.
+# Die ausgelesenen Features werden anschließend mit dem zugehörigen Label in einer Excel-Datei gespeichert.
+# Damit die Features dem Label zugeordnet werden können, müssen die Bilder in einem Ordner mit entsprechendem
+# Labelnamen gespeicher sein.
+#
+# Autoren: Barabanow, Günter, Kauff, Sachweh
+
 import cv2 as cv
 import pandas as pd
 

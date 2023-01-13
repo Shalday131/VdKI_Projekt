@@ -1,3 +1,10 @@
+# Beschreibung der Funktionen
+# Diese Klasse ließt die Features aus den eingelesenen Bilder heraus. Folgende Features werden rausgelesen:
+# Anzahl an Kreisen, Anzahl an Ecken, Anzahl an Linien, Anzahl an Orbs, Anzahl an Keypoints, Aspect Ratio
+# von dem kleinsten Rechteck, der das Object umgibt und der Maximale Histogrammwert.
+
+# Autoren: Barabanow, Günter, Kauff, Sachweh
+
 import cv2 as cv
 import numpy as np
 

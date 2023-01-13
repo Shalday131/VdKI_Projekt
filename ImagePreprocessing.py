@@ -1,3 +1,9 @@
+# Beschreibung der Funktionen
+# Mit Hilfe dieser Klasse werden alle Bilder auf die selbe Größe gebracht, in Gratöne konvertiert und ein
+# Unschärfefilter drübergelegt.
+#
+# Autoren: Barabanow, Günter, Kauff, Sachweh
+
 import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
